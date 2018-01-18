@@ -8,12 +8,13 @@ then
   exit
 fi
 
-MY_CONTEXT="gke_main-183300_us-east1-b_main"
+MY_CONTEXT="gcp_main_vpn"
 CONTEXT=$(kubectl config current-context)
 if [ $CONTEXT != $MY_CONTEXT ]; then
   kubectl config use-context ${MY_CONTEXT}
 fi
 
+#specifying namespace here is redunant as the forced context above is pinned to the 'vpn' namespace when created in the 'bootstrap.sh' script
 NAMESPACE=$(kubectl get pods --all-namespaces -l type=openvpn -o jsonpath='{.items[0].metadata.namespace}')
 if [ $NAMESPACE != "vpn" ]; then
   kubectl config set-context ${MY_CONTEXT} --cluster=${MY_CONTEXT} --namespace=vpn
